@@ -1,0 +1,14 @@
+{
+  "game": "mock-window-game",
+  "title": "Mock Window Game",
+  "version": "0.0.0",
+  "window": {
+    "width": 1280,
+    "height": 720,
+    "fullscreen": false
+  },
+  "features": {
+    "protector": true,
+    "singleExe": true
+  }
+}

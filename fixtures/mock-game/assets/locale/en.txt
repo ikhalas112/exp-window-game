@@ -1,0 +1,3 @@
+Mock Window Game — English locale strings
+START=Start Game
+EXIT=Exit

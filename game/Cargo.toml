@@ -1,0 +1,13 @@
+[package]
+name = "mock-window-game-bin"
+version = "0.1.0"
+edition = "2021"
+description = "Minimal Windows mock game binary for protector release pipeline"
+
+[[bin]]
+name = "game"
+path = "src/main.rs"
+
+[profile.release]
+strip = true
+lto = true

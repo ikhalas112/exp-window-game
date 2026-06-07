@@ -1,0 +1,5 @@
+/build/
+/output/
+/.env
+*.exe
+!fixtures/mock-game/game.exe

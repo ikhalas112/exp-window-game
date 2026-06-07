@@ -1,0 +1,6 @@
+{
+  "levels": [
+    { "id": 1, "name": "Tutorial", "file": "data/level01.dat" },
+    { "id": 2, "name": "Forest", "file": "data/level02.dat" }
+  ]
+}

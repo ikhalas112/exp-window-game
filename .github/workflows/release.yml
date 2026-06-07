@@ -1,0 +1,16 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    uses: ikhalas112/exp-release-tools/.github/workflows/release-windows.reusable.yml@v0.3.0
+    with:
+      config: release.config.json
+      tools_repo: ikhalas112/exp-release-tools
+      tools_version: v0.3.0
+    secrets:
+      TOOLS_DOWNLOAD_TOKEN: ${{ secrets.TOOLS_DOWNLOAD_TOKEN }}

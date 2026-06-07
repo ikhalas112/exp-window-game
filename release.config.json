@@ -1,0 +1,37 @@
+{
+  "game": "mock-window-game",
+  "distribution": "single_exe",
+  "source": "build",
+  "build": {
+    "dir": "build",
+    "mockFixture": "fixtures/mock-game"
+  },
+  "protector": {
+    "inputExe": "game.exe",
+    "assetsDir": "assets",
+    "outputExe": "MockWindowGame.exe",
+    "phase2": true,
+    "compressionLevel": 6,
+    "chunkSize": 65536,
+    "enableProtectedAll": true
+  },
+  "macos": {
+    "appBundle": "MockWindowGame.app",
+    "outputFile": "MockWindowGame-macos.zip",
+    "versionFileDir": "Contents/Resources",
+    "mockFixture": "fixtures/mock-game-macos"
+  },
+  "r2": {
+    "bucket": "mockwindowgame"
+  },
+  "launcher": {
+    "min_version": "1.0.0"
+  },
+  "concurrency": {
+    "upload": 8
+  },
+  "cdnBaseUrl": "",
+  "runner": {
+    "workspaceMode": "fresh"
+  }
+}

@@ -1,0 +1,10 @@
+include:
+  - local: '../maxgame-release-tools/templates/gitlab/release-protector.yml'
+
+stages:
+  - release
+
+release:
+  extends: .release-protector
+  variables:
+    TOOLS_DIR: '../maxgame-release-tools'
