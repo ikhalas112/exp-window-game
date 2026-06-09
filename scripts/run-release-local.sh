@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Local release pipeline test.
-#   windows lane (default): steps 1–5 + manifest; protect requires Windows
-#   macos lane:             resolve → mock-build → inject → package (ditto) → manifest
+#   windows lane (default): stage build/ (fixture) → inject → protect → manifest
+#   macos lane:             stage build/ (fixture .app) → inject → package → manifest
+# The release tool does not build the game; it packs a prebuilt build/ dir. This
+# script stages build/ from the local fixture to stand in for the game's build.
 # Usage: run-release-local.sh [tag] [channel] [platform]
 set -euo pipefail
 
@@ -11,6 +13,9 @@ CONFIG="$ROOT/release.config.json"
 TAG="${1:-v0.1.0-dev}"
 CHANNEL="${2:-dev}"
 PLATFORM="${3:-windows}"
+# Game name is release-tools-internal config (GAME_NAME env / the workflow
+# `game_name` input) — no longer read from release.config.json.
+export GAME_NAME="${GAME_NAME:-mock-window-game}"
 
 echo "=== mock-window-game local release test ==="
 echo "root:     $ROOT"
@@ -41,8 +46,10 @@ if [[ "$PLATFORM" == "macos" ]]; then
   "$ENGINE" resolve "$TAG" --config="$CONFIG" --format=env --platform=macos | head -6
   echo
 
-  echo "--- mock-build (macos) ---"
-  "$ENGINE" mock-build --config="$CONFIG" --output=build --platform=macos
+  echo "--- stage build/ (fixture .app → build/) ---"
+  rm -rf build && mkdir -p build
+  ditto fixtures/mock-game-macos/MockWindowGame.app build/MockWindowGame.app
+  echo "staged build/MockWindowGame.app"
   echo
 
   echo "--- inject-version ---"
@@ -77,8 +84,11 @@ echo "--- resolve ---"
 "$ENGINE" resolve "$TAG" --config="$CONFIG" --format=env | head -5
 echo
 
-echo "--- mock-build ---"
-"$ENGINE" mock-build --config="$CONFIG" --output=build
+echo "--- stage build/ (fixture → build/) ---"
+rm -rf build && mkdir -p build
+cp fixtures/mock-game/game.exe build/game.exe
+cp -R fixtures/mock-game/assets build/assets
+echo "staged build/game.exe + build/assets/"
 echo
 
 echo "--- inject-version ---"

@@ -10,6 +10,9 @@ $Engine = if ($env:ENGINE_BIN) { $env:ENGINE_BIN } else {
 $Config = Join-Path $Root 'release.config.json'
 $Tag = if ($args.Count -gt 0) { $args[0] } else { 'v0.1.0-dev' }
 $Channel = if ($args.Count -gt 1) { $args[1] } else { 'dev' }
+# Game name is release-tools-internal config (GAME_NAME env / the workflow
+# `game_name` input) — no longer read from release.config.json.
+if (-not $env:GAME_NAME) { $env:GAME_NAME = 'mock-window-game' }
 
 Write-Host "=== mock-window-game Windows release test ==="
 Write-Host "engine: $Engine"
@@ -25,14 +28,19 @@ if (-not (Test-Path $Engine)) {
 
 Push-Location $Root
 try {
-    # Prefer real game binary from game/ crate
+    # Build the real game binary from game/ crate into fixtures/mock-game/game.exe
     & (Join-Path $Root 'scripts/build-mock-game.ps1')
 
     Write-Host '--- resolve ---'
     & $Engine resolve $Tag --config=$Config --format=env
 
-    Write-Host '--- mock-build ---'
-    & $Engine mock-build --config=$Config --output=build
+    # The release tool does not build the game; it packs a prebuilt build/ dir.
+    # Stage build/ from the fixture to stand in for the game's build output.
+    Write-Host '--- stage build/ (fixture -> build/) ---'
+    Remove-Item -Recurse -Force build -ErrorAction SilentlyContinue
+    New-Item -ItemType Directory -Force -Path build | Out-Null
+    Copy-Item fixtures/mock-game/game.exe build/game.exe
+    Copy-Item -Recurse fixtures/mock-game/assets build/assets
 
     Write-Host '--- inject-version ---'
     & $Engine inject-version --source=build/assets --tag=$Tag --channel=$Channel

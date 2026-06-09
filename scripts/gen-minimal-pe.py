@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Generate a minimal valid PE32+ executable (x64) that exits with code 0.
 
-Used for mock-build / local pipeline tests when a Windows linker is unavailable.
-The binary is not a real game — only a structurally valid PE for fixture copy tests.
+Used to stage build/ for local pipeline tests when a Windows linker is unavailable.
+The binary is not a real game — only a structurally valid PE for fixture staging.
 On Windows CI, prefer building game/ via build-mock-game.ps1 instead.
 """
 from __future__ import annotations
